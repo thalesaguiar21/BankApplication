@@ -3,6 +3,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.ConnectException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -56,12 +57,8 @@ public class Client {
 			
 			try {
 				userOp = Integer.parseInt(reader.nextLine());
-			} catch (NumberFormatException numForm) {
-				userOp = -1;
-			}
-			
-			
-			switch (userOp) {
+				
+				switch (userOp) {
 				case 1:
 					createOpUi();
 					break;
@@ -89,8 +86,22 @@ public class Client {
 				default:
 					System.out.println("\nThis is not a valid operation, please try again!\n");
 					break;
+				}
+			
+			} catch (NumberFormatException numForm) {
+				System.out.println("\nFailed to create account: Invalid CPF");
+			} catch (NullPointerException noUserName) {
+				System.out.println("\nPlase, insert an user name!");
+			} catch (BankException bankE) { 
+				System.out.println("ERROR: " + bankE.getMessage());
+			} catch (SQLException sqlErr) {
+				System.out.println("ERROR: The request to the DataBase have failed, plase contact the support!");
+			} catch (ConnectException connExc) {
+				System.out.println("ERROR: Could not connect to server");
+			} finally {
+				System.out.println("\n");
 			}
-			System.out.println("Press enter to go back to the menu...");
+			if (userOp != 6) System.out.println("Press enter to go back to the menu...");
 			reader.nextLine();
 			for (int i = 0; i < 50; i++) {
 				System.out.println();
@@ -106,33 +117,21 @@ public class Client {
 	 * 
 	 * @throws RemoteException
 	 */
-	public void createOpUi() throws RemoteException {
+	public void createOpUi() throws RemoteException, BankException, SQLException {
 		
-		try {
-			System.out.println("\nEnter the foloowing information to create a new account: ");
-			
-			System.out.print("Name: ");
-			String userName = reader.nextLine();
-			
-			System.out.print("CPF: ");
-			String userCPF = reader.nextLine();
-			
-			System.out.print("Balance: ");
-			double balance = Double.parseDouble(reader.nextLine());
-			
-			String accNumber = stub.createAccount(userName, userCPF, balance);
-			System.out.println("\nYour account was created with success! The account number is " + accNumber);
-			
-		} catch (NumberFormatException numForm) {
-			System.out.println("\nFailed to create account: Invalid CPF");
-		} catch (NullPointerException noUserName) {
-			System.out.println("\nPlase, insert an user name!");
-		} catch (BankException bankE) { 
-			System.out.println("ERROR: " + bankE.getMessage());
-		} finally {
-			System.out.println("\n");
-		}
+		System.out.println("\nEnter the foloowing information to create a new account: ");
 		
+		System.out.print("Name: ");
+		String userName = reader.nextLine();
+		
+		System.out.print("CPF: ");
+		String userCPF = reader.nextLine();
+		
+		System.out.print("Balance: ");
+		double balance = Double.parseDouble(reader.nextLine());
+		
+		String accNumber = stub.createAccount(userName, userCPF, balance);
+		System.out.println("\nYour account was created with success! The account number is " + accNumber);
 	}
 	
 	/**
@@ -141,30 +140,19 @@ public class Client {
 	 * 
 	 * @throws RemoteException
 	 */
-	public void depositOpUi() throws RemoteException {
+	public void depositOpUi() throws RemoteException, BankException, SQLException {
+	
+		System.out.println("\nEnter the following information to make a deposit: ");
 		
-		try {
-			System.out.println("\nEnter the following information to make a deposit: ");
-			
-			System.out.print("Account number: ");
-			int accountNumber = Integer.parseInt(reader.nextLine());
-			
-			System.out.print("Value: ");
-			double value = Double.parseDouble(reader.nextLine());
-			System.out.println("\n");
-			
-			String result = stub.deposit(accountNumber, value);
-			System.out.println("\nValue deposited with success, your account new balance is: " + result);
-			
-		} catch (NumberFormatException numForm) {
-			System.out.println("\nInvalid account number or value!");
-		} catch (BankException bankE) {
-			System.out.println("ERROR: " + bankE.getMessage());
-		} catch (SQLException sqlE) {
-			System.out.println("ERROR: Couldn't access database!");
-		} finally {
-			System.out.println("\n");
-		}
+		System.out.print("Account number: ");
+		int accountNumber = Integer.parseInt(reader.nextLine());
+		
+		System.out.print("Value: ");
+		double value = Double.parseDouble(reader.nextLine());
+		System.out.println("\n");
+		
+		String result = stub.deposit(accountNumber, value);
+		System.out.println("\nValue deposited with success, your account new balance is: " + result);
 	}
 	
 	/**
@@ -173,30 +161,19 @@ public class Client {
 	 * 
 	 * @throws RemoteException
 	 */
-	public void withdrawOpUi() throws RemoteException {
+	public void withdrawOpUi() throws RemoteException, BankException, SQLException {
+	
+		System.out.println("\nEnter the following information to make a withdraw: ");
 		
-		try {
-			System.out.println("\nEnter the following information to make a withdraw: ");
-			
-			System.out.print("Account number: ");
-			int accountNumber = Integer.parseInt(reader.nextLine());
-			
-			System.out.print("Value: ");
-			double value = Double.parseDouble(reader.nextLine());
-			System.out.println("\n");
-			
-			String result = stub.withdraw(accountNumber, value);
-			System.out.println("\nValue withdrawn with success, your account new balance is: " + result);
-			
-		} catch (NumberFormatException numForm) {
-			System.out.println("\nInvalid account number or value!");
-		} catch (BankException bankE) {
-			System.out.println("ERROR: " + bankE.getMessage());
-		} catch (SQLException sqlE) {
-			System.out.println("ERROR: Couldn't access database!");
-		} finally {
-			System.out.println("\n");
-		}
+		System.out.print("Account number: ");
+		int accountNumber = Integer.parseInt(reader.nextLine());
+		
+		System.out.print("Value: ");
+		double value = Double.parseDouble(reader.nextLine());
+		System.out.println("\n");
+		
+		String result = stub.withdraw(accountNumber, value);
+		System.out.println("\nValue withdrawn with success, your account new balance is: " + result);
 	}
 	
 	/**
@@ -205,33 +182,22 @@ public class Client {
 	 * 
 	 * @throws RemoteException
 	 */
-	public void transferenceOpUi() throws RemoteException {
+	public void transferenceOpUi() throws RemoteException, BankException, SQLException {
 
-		try {
-			System.out.println("\nEnter the following information to make a transferece: ");
-			
-			System.out.print("Your account number: ");
-			int accNumber = Integer.parseInt(reader.nextLine());
-			
-			System.out.print("Receiver account number: ");
-			int receiAccNumber = Integer.parseInt(reader.nextLine());
-			
-			System.out.print("Value: ");
-			double value = Double.parseDouble(reader.nextLine());
-			System.out.println("\n");
-			
-			String result = stub.transferece(receiAccNumber, accNumber, value);
-			System.out.println("\nValue transfered with success, the accounts new balances ares:" + result);
-			
-		} catch (NumberFormatException numForm) {
-			System.out.println("\nInvalid account number or value!");
-		} catch (BankException bankE) {
-			System.out.println("ERROR: " + bankE.getMessage());
-		} catch (SQLException sqlE) {
-			System.out.println("ERROR: Couldn't access database!");
-		} finally {
-			System.out.println("\n");
-		}
+		System.out.println("\nEnter the following information to make a transferece: ");
+		
+		System.out.print("Your account number: ");
+		int accNumber = Integer.parseInt(reader.nextLine());
+		
+		System.out.print("Receiver account number: ");
+		int receiAccNumber = Integer.parseInt(reader.nextLine());
+		
+		System.out.print("Value: ");
+		double value = Double.parseDouble(reader.nextLine());
+		System.out.println("\n");
+		
+		String result = stub.transferece(receiAccNumber, accNumber, value);
+		System.out.println("\nValue transfered with success, the accounts new balances ares:" + result);
 	}
 	
 	/**
@@ -239,25 +205,15 @@ public class Client {
 	 * a sua conta
 	 * 
 	 */
-	public void printStatementOpUi() throws RemoteException {
-		try {
-			System.out.println("\nEnter the following information to print the statement: ");
-			
-			System.out.print("Account number: ");
-			int accNumber = Integer.parseInt(reader.nextLine());
-			
-			String result = stub.printStatement(accNumber);
-			System.out.println(result);
-			
-		} catch (NumberFormatException numForm) {
-			System.out.println("\nInvalid account number!");
-		} catch (SQLException sqlE) {
-			System.out.println("ERROR: Couldn't access database!");
-		} catch (BankException bankE) {
-			System.out.println("ERROR: " + bankE.getMessage());
-		} finally {
-			System.out.println("\n");
-		}
+	public void printStatementOpUi() throws RemoteException, BankException, SQLException {
+		
+		System.out.println("\nEnter the following information to print the statement: ");
+		
+		System.out.print("Account number: ");
+		int accNumber = Integer.parseInt(reader.nextLine());
+		
+		String result = stub.printStatement(accNumber);
+		System.out.println(result);
 	}
 
 	

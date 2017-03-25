@@ -30,7 +30,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 	
 	@Override
 	public String createAccount(String userName, String userCPF, double balance) 
-			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException {
+			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException, SQLException {
 		
 		System.out.println("Creating account...");
 		if(balance < 0) {

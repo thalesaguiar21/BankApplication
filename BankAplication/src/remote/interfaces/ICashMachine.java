@@ -33,7 +33,7 @@ public interface ICashMachine extends Remote {
 	 * @throws SQLException Quando ocorre algum erro ao executar querys.
 	 */
 	public String createAccount(String userName, String userCPF, double balance) 
-			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException;
+			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException, SQLException;
 	
 	/**
 	 * Realiza um depósito de um valor em uma conta com o númeroda conta passado como parâmetro.
