@@ -89,7 +89,7 @@ public class Client {
 				}
 			
 			} catch (NumberFormatException numForm) {
-				System.out.println("\nFailed to create account: Invalid CPF");
+				System.out.println("\nInvalid number inserted!");
 			} catch (NullPointerException noUserName) {
 				System.out.println("\nPlase, insert an user name!");
 			} catch (BankException bankE) { 
@@ -97,7 +97,7 @@ public class Client {
 			} catch (SQLException sqlErr) {
 				System.out.println("ERROR: The request to the DataBase have failed, plase contact the support!");
 			} catch (ConnectException connExc) {
-				System.out.println("ERROR: Could not connect to server");
+				System.out.println("ERROR: Could not connect to server!");
 			} finally {
 				System.out.println("\n");
 			}
