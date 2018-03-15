@@ -30,7 +30,7 @@ public class AccountDAO {
 	 * @param acc Conta que será inserida no banco.
 	 * @return true Caso a operação ocorra normalmente.
 	 */
-	public Account createAccount(String owner, String ownerCPF, double balance) throws SQLException {
+	public Account createAccount(String owner, String ownerCPF, double balance) {
 		String sql = "";
 		try {
 			Account acc = new Account(owner, ownerCPF, balance);
@@ -42,6 +42,8 @@ public class AccountDAO {
 			return acc;
 		} catch (ClassNotFoundException clasF) {
 			System.out.println("Ocorreu um erro ao tentar encontrar uma classe para o Driver JDBC");
+		} catch (SQLException sqlExc) {
+			System.out.println("OCorreu um erro ao tentar executar a consulta!");
 		}
 		
 		return null;
