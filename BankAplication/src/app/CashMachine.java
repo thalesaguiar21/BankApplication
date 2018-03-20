@@ -30,7 +30,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 	
 	private boolean validateCpf(String cpf) {
 		return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")
-				&& cpf.matches("\\d{3}"); 
+				&& cpf.matches("\\d{12}"); 
 	}
 	
 	@Override
@@ -40,7 +40,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 		System.out.println("Creating account...");
 		if(balance < 0) {
 			throw new InvalidValueException();
-		} else if(!validateCpf(userCPF)){
+		} else if(!validateCpf(userCPF)) {
 			throw new InvalidCpfException();
 		} else if(userName == null || userName.equals("") || userName == ("\n")) {
 			throw new NullPointerException();
