@@ -30,7 +30,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 	
 	private boolean validateCpf(String cpf) {
 		return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")
-				&& cpf.matches("\\d{12}"); 
+				|| cpf.matches("\\d{12}"); 
 	}
 	
 	@Override

@@ -17,9 +17,9 @@ public class RMIServer {
 	public static void main(String[] args) throws RemoteException, MalformedURLException {
 		
 		ICashMachine cashMachine = new CashMachine();
-		System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+		System.setProperty("java.rmi.server.hostname", "192.168.43.161");
 		LocateRegistry.createRegistry(9090);
-		Naming.rebind("rmi://localhost:9090/CashMachine", cashMachine);
+		Naming.rebind("rmi://192.168.43.161:9090/CashMachine", cashMachine);
 		System.out.println("Server ready and registred in the RMI Registry.");
 	}
 
