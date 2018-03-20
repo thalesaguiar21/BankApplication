@@ -28,6 +28,11 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 		myDao = new AccountDAO();
 	}
 	
+	private boolean validateCpf(String cpf) {
+		return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")
+				&& cpf.matches("\\d{3}"); 
+	}
+	
 	@Override
 	public String createAccount(String userName, String userCPF, double balance) 
 			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException, SQLException {
@@ -35,7 +40,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 		System.out.println("Creating account...");
 		if(balance < 0) {
 			throw new InvalidValueException();
-		} else if(!userCPF.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
+		} else if(!validateCpf(userCPF)){
 			throw new InvalidCpfException();
 		} else if(userName == null || userName.equals("") || userName == ("\n")) {
 			throw new NullPointerException();
