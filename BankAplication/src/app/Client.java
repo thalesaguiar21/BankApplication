@@ -31,7 +31,7 @@ public class Client {
 	 * @throws NotBoundException
 	 */
 	public Client() throws MalformedURLException, RemoteException, NotBoundException {
-		stub = (ICashMachine) Naming.lookup("rmi://192.168.43.179:9090/CashMachine");
+		stub = (ICashMachine) Naming.lookup("rmi://localhost:9090/CashMachine");
 		reader = new Scanner(System.in);
 	}
 	
@@ -98,7 +98,6 @@ public class Client {
 				System.out.println("ERROR: The request to the DataBase have failed, plase contact the support!");
 			} catch (ConnectException connExc) {
 				System.out.println("ERROR: Could not connect to server!");
-				connExc.printStackTrace();
 			} finally {
 				System.out.println("\n");
 			}

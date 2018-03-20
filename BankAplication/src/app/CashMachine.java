@@ -29,20 +29,20 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 	}
 	
 	@Override
-	public String createAccount(String userName, String userCPF, double balance) throws RemoteException {
+	public String createAccount(String userName, String userCPF, double balance) 
+			throws RemoteException, NullPointerException, InvalidValueException, InvalidCpfException, SQLException {
 		
 		System.out.println("Creating account...");
 		if(balance < 0) {
-			System.out.println("Balanço inválido");
+			throw new InvalidValueException();
 		} else if(!userCPF.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")){
-			System.out.println("CPF inválido");
+			throw new InvalidCpfException();
 		} else if(userName == null || userName.equals("") || userName == ("\n")) {
-			System.out.println("CPF inválido");
+			throw new NullPointerException();
 		} else {
 			Account acc = myDao.createAccount(userName, userCPF, balance);
 			return "" + acc.getAccountNumber();
 		}
-		return "!";
 	}
 
 
