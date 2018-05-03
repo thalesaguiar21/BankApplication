@@ -1,10 +1,16 @@
 package domain;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 public class Log {
 
 	private Long id;
-	private Account account;
 	private String logMsg;
+	
+	@ManyToOne
+	@JoinColumn(name="account_id")
+	private Account account;
 
 	public Log() {
 		id = null;

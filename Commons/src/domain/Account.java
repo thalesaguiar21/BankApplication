@@ -1,11 +1,15 @@
 package domain;
 
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Account {
@@ -13,7 +17,7 @@ public class Account {
 	public static final Double MAX_BALANCE = 10000000.0;
 	
 	@Id @GeneratedValue
-	@Column(name = "id_account")
+	@Column(name = "account_id")
 	private Long id;
 	
 	@Column
@@ -28,6 +32,9 @@ public class Account {
 	@Column
 	private String ownerName;
 	
+	@OneToMany(mappedBy="account", targetEntity=Log.class, fetch=FetchType.LAZY)
+	private Set<Log> logs;
+	
 	public Account() {}
 	
 	public Account(double balance, String cpf, String ownerName) {
@@ -37,6 +44,16 @@ public class Account {
 		accNumber = accNumGenerator.nextLong();
 		ownerCpf = cpf;
 		this.ownerName = ownerName;
+		this.logs = new TreeSet<>();
+	}
+	
+	public Account(Long id, Long accNum, double balance, String cpf, String ownerName, Set<Log> logs) {
+		this.id = id;
+		this.balance = balance;
+		accNumber = accNum;
+		ownerCpf = cpf;
+		this.ownerName = ownerName;
+		this.logs = logs;
 	}
 	
 	public boolean withdraw(Double value) {
@@ -59,6 +76,13 @@ public class Account {
 		return false;
 	}
 	
+	public Set<Log> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(Set<Log> logs) {
+		this.logs = logs;
+	}
 
 	public Long getId() {
 		return id;
