@@ -29,8 +29,15 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 	}
 	
 	private boolean validateCpf(String cpf) {
-		return cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}")
-				|| cpf.matches("\\d{12}"); 
+			return (cpf != null) && 
+					(cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}") || cpf.matches("\\d{11}"));
+	}
+	
+	private String formatCpf(String cpf) {
+		if(validateCpf(cpf)) {
+			return cpf.replaceAll("\\.\\-", "");
+		}
+		return null;
 	}
 	
 	@Override
@@ -45,7 +52,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine{
 		} else if(userName == null || userName.equals("") || userName == ("\n")) {
 			throw new NullPointerException();
 		} else {
-			Account acc = myDao.createAccount(userName, userCPF, balance);
+			Account acc = myDao.createAccount(userName, formatCpf(userCPF), balance);
 			return "" + acc.getAccountNumber();
 		}
 	}
