@@ -53,8 +53,8 @@ public class Account {
 		this.logs = new TreeSet<>();
 	}
 	
-	public Account(Long id, Long accNum, double balance, String cpf, String ownerName, Set<Log> logs) {
-		this.id = id;
+	public Account(Long accNum, double balance, String cpf, String ownerName, Set<Log> logs) {
+		this.id = Long.valueOf(0);
 		this.balance = balance;
 		accNumber = accNum;
 		ownerCpf = cpf;

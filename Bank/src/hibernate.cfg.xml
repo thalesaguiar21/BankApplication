@@ -19,15 +19,12 @@
       </property>
       
       <property name = "hibernate.connection.username">
-         root
+         admin
       </property>
       
       <property name = "hibernate.connection.password">
-         root123
+         adm1n
       </property>
-      
-      <!-- List of XML mapping files -->
-      <mapping resource = "Employee.hbm.xml"/>
       
    </session-factory>
 </hibernate-configuration>
