@@ -32,33 +32,25 @@ public class Account {
 	@Column(nullable=false)
 	private Long accNumber;
 	
-	@Column(nullable=false)
-	private String ownerCpf;
-	
-	@Column
-	private String ownerName;
-	
 	@OneToMany(mappedBy="account", targetEntity=Log.class, fetch=FetchType.LAZY)
 	private Set<Log> logs;
 	
 	public Account() {}
 	
-	public Account(double balance, String cpf, String ownerName) {
+	public Account(double balance, User usr) {
 		Random accNumGenerator = new Random(); 
 		this.id = Long.valueOf(0);
 		this.balance = balance;
 		accNumber = accNumGenerator.nextLong();
-		ownerCpf = cpf;
-		this.ownerName = ownerName;
+		this.user = usr;
 		this.logs = new TreeSet<>();
 	}
 	
-	public Account(Long accNum, double balance, String cpf, String ownerName, Set<Log> logs) {
+	public Account(Long accNum, double balance, User usr, Set<Log> logs) {
 		this.id = Long.valueOf(0);
 		this.balance = balance;
 		accNumber = accNum;
-		ownerCpf = cpf;
-		this.ownerName = ownerName;
+		this.user = usr;
 		this.logs = logs;
 	}
 	
@@ -112,21 +104,5 @@ public class Account {
 
 	public void setAccNumber(Long accNumber) {
 		this.accNumber = accNumber;
-	}
-
-	public String getOwnerCpf() {
-		return ownerCpf;
-	}
-
-	public void setOwnerCpf(String ownerCpf) {
-		this.ownerCpf = ownerCpf;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
 	}
 }
