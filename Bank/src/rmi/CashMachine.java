@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import domain.AOperation;
-import remote.ICashMachine;
+import services.ICashMachine;
 
 public class CashMachine extends UnicastRemoteObject implements ICashMachine, Serializable {
 	

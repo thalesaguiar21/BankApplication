@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 
 import domain.AOperation;
 import operation.OperationType;
-import remote.ICashMachine;
+import services.ICashMachine;
 import ui.BasicInterface;
 
 public class Client {
