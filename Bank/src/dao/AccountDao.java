@@ -9,22 +9,23 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import domain.Account;
+import domain.User;
 
 public class AccountDao {
 	
 	public List<Account> createAccounts(Collection<Account> accounts) {
 		List<Account> accs = new ArrayList<>();
 		for(Account acc : accounts) {
-			accs.add(createAccount(acc.getOwnerCpf(), acc.getOwnerName(), acc.getBalance()));
+			accs.add(createAccount(acc.getUser(), acc.getBalance()));
 		}
 		return accs;
 	}
 	
-	public Account createAccount(String cpf, String ownerName, double balance) {
+	public Account createAccount(User usr, double balance) {
 		Session session = SessionManager.getSession();
 		Transaction t = null;
 		Long accId = null;
-		Account acc = new Account(balance, cpf, ownerName);
+		Account acc = new Account(balance, usr);
 		
 		try {
 			t = session.beginTransaction();

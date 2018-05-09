@@ -25,7 +25,7 @@ public class Account {
 	@ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
-	
+
 	@Column
 	private Double balance;
 	
@@ -104,5 +104,14 @@ public class Account {
 
 	public void setAccNumber(Long accNumber) {
 		this.accNumber = accNumber;
+	}
+	
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }
