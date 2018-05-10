@@ -1,8 +1,4 @@
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import dao.AccountDao;
-import dao.SessionManager;
 import domain.Account;
 import domain.User;
 
@@ -18,7 +14,4 @@ public class TestORM {
 		
 		System.out.println("Account created with success!");
 	}
-	
-	
-
 }

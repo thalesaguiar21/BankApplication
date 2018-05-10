@@ -12,7 +12,7 @@ public class SessionManager {
 	
 	public static Session getSession() {
 		if(factory == null) {
-			try {
+			try {				
 				factory = new Configuration().configure().buildSessionFactory();
 			} catch (Throwable e) {
 				System.err.println("Failed to create session factory!");
