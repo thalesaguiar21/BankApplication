@@ -15,7 +15,7 @@
       <property name="show_sql">true</property>
       <property name="format_sql">true</property>
       
-      <!-- Assume test is the database name -->
+      <!-- Database connection -->
       
       <property name = "hibernate.connection.url">
          jdbc:mysql://localhost/basic_db
@@ -30,7 +30,7 @@
       </property>
       
       
-      <!-- Mapeamentos de entidades -->
+      <!-- Entities mappings -->
       
       <mapping class="domain.User"/>
       <mapping class="domain.Account"/>
