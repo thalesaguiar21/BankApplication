@@ -10,8 +10,11 @@ public class TestORM {
 		usr.setCpf("12312312300");
 		usr.setName("Test");
 		
-		Account acc = accDao.createAccount(usr, 700.0);
-		
-		System.out.println("Account created with success!");
+		try {
+			Account acc = accDao.createAccount(usr, 700.0);	
+			System.out.println("Account created with success!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
 	}
 }

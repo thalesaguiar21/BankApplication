@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ public class Account {
 
 	public static final Double MAX_BALANCE = 10000000.0;
 	
-	@Id @GeneratedValue
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "account_id")
 	private Long id;
 
@@ -26,10 +27,10 @@ public class Account {
 	@JoinColumn(name="user_id")
 	private User user;
 
-	@Column
+	@Column(nullable=false)
 	private Double balance;
 	
-	@Column(nullable=false)
+	@Column(name="acc_number", nullable=false)
 	private Long accNumber;
 	
 	@OneToMany(mappedBy="account", targetEntity=Log.class, fetch=FetchType.LAZY)
@@ -41,7 +42,7 @@ public class Account {
 		Random accNumGenerator = new Random(); 
 		this.id = Long.valueOf(0);
 		this.balance = balance;
-		accNumber = accNumGenerator.nextLong();
+		accNumber = accNumGenerator.nextLong() % Long.valueOf(1000000000);
 		this.user = usr;
 		this.logs = new TreeSet<>();
 	}

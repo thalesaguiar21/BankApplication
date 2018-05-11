@@ -6,23 +6,20 @@ import org.hibernate.cfg.Configuration;
 
 public class SessionManager {
 
-	private static SessionFactory factory;
+	private static SessionFactory sessionFactory;
 	
 	private SessionManager() {}
 	
 	public static Session getSession() {
-		if(factory == null) {
+		if(sessionFactory == null) {
 			try {				
-				factory = new Configuration().configure().buildSessionFactory();
+				sessionFactory = new Configuration().configure().buildSessionFactory();
 			} catch (Throwable e) {
 				System.err.println("Failed to create session factory!");
 				e.printStackTrace();
 			}
 		}
 		
-		if(factory.isOpen())
-			factory.close();
-		
-		return factory.openSession();
+		return sessionFactory.openSession();
 	}
 }
