@@ -16,10 +16,6 @@
 		true
       </property>
       
-      <property name="format_sql">
-      	true
-      </property>
-      
       <!-- Database connection -->
       
       <property name = "hibernate.connection.url">
