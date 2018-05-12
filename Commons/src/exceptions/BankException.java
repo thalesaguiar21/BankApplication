@@ -1,6 +1,8 @@
 package exceptions;
 
-public class BankException extends Exception {
+import java.rmi.RemoteException;
+
+public class BankException extends RemoteException {
 
 	/**
 	 * 

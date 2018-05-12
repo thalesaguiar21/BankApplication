@@ -15,11 +15,11 @@ public abstract class AOperation implements Serializable {
 	
 	public abstract boolean isValid();
 	
-	public String createFormattedLog() {
-		String log = "[" + type + "]\t";
-		log += (value != null) ? value : "0";
-		log += "\t\t" + new Timestamp(new Date().getTime());
-		return log;
+	public String getLog() {
+		String msg = "[" + type + "]\t";
+		msg += (value != null) ? value : "0";
+		msg += "\t\t" + new Timestamp(new Date().getTime());
+		return msg;
 	}
 	
 	public Integer getOriginAccount() {

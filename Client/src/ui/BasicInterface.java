@@ -104,13 +104,13 @@ public class BasicInterface {
 		CreateAccOperation op = new CreateAccOperation();
 		try {
 			System.out.print("Owner's name: ");
-			op.setOwnerName(reader.next());
+			op.setOwnerName(reader.nextLine());
 			
 			if(!NameUtils.isValidName(op.getOwnerName()))
-				throw new BankException("[ERROR] A name at leat 4 and at most 30 characters, and only letters!");
+				throw new BankException("[ERROR] A name must have at least 4 and at most 30 characters, and only letters!");
 			
 			System.out.print("Owner's cpf: ");
-			op.setCpf(reader.next());
+			op.setCpf(reader.nextLine());
 			
 			if(!CpfUtils.isValid(op.getCpf()))
 				throw new InputMismatchException();

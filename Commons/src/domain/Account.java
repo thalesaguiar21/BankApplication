@@ -44,7 +44,7 @@ public class Account {
 		Random accNumGenerator = new Random(); 
 		this.id = Long.valueOf(0);
 		this.balance = balance;
-		accNumber = accNumGenerator.nextLong() % Long.valueOf(1000000000);
+		accNumber = Math.abs(accNumGenerator.nextLong()) % Long.valueOf(1000000000);
 		this.user = usr;
 		this.logs = new TreeSet<>();
 	}

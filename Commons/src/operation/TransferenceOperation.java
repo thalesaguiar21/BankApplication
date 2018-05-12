@@ -18,7 +18,7 @@ public class TransferenceOperation extends AOperation {
 	}
 
 	@Override
-	public String createFormattedLog() {
+	public String getLog() {
 		String log = "[TRANSFERENCE]\t" + targetAccount + "\t";
 		log += (value != null) ? value + "\t" : "";
 		log += new Date();

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -80,9 +82,22 @@ public class AccountDao {
 		return result;
 	}
 	
-	public Account findById(int id) {
+	@SuppressWarnings("unchecked")
+	public Account findByNumber(Long number) {
 		Account acc = null;
-		if(id != 0) {
+		Session session = SessionManager.getSession();
+		
+		try {
+			String projection = " from Account where accNumber = :number ";
+			Query query = session.createQuery(projection);
+			query.setParameter("number", number);
+			List<Account> result = query.getResultList();
+			if(result != null)
+				acc = result.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 		return acc;
 	}

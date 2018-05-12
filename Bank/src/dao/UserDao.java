@@ -3,6 +3,8 @@ package dao;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -89,5 +91,31 @@ public class UserDao {
 			e.printStackTrace();
 		}
 		return users;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public User findByCpf(String cpf) {
+		User usr = null;
+		if(CpfUtils.isValid(cpf))
+			return usr;
+		
+		Session session = SessionManager.getSession();
+		
+		try {
+			String projection = " from User where cpf = :user_cpf ";
+			Query query = session.createQuery(projection);
+			query.setParameter("user_cpf", cpf);
+			List<User> result = query.getResultList();
+			if(result == null)
+				usr = null;
+			else
+				usr = result.get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return usr;
 	}
 }
