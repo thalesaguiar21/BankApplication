@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,7 +34,8 @@ public class Account {
 	@Column(name="acc_number", nullable=false)
 	private Long accNumber;
 	
-	@OneToMany(mappedBy="account", targetEntity=Log.class, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="account", targetEntity=Log.class, fetch=FetchType.LAZY,
+			cascade = CascadeType.ALL)
 	private Set<Log> logs;
 	
 	public Account() {}

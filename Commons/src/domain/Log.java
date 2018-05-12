@@ -28,8 +28,7 @@ public class Log {
 		msg = null;
 	}
 	
-	public Log(Long id, String msg, Account acc) {
-		this.id = id;
+	public Log(String msg, Account acc) {
 		this.msg = msg;
 		account = acc;
 	}
@@ -50,11 +49,11 @@ public class Log {
 		this.account = account;
 	}
 
-	public String getLogMsg() {
+	public String getMsg() {
 		return msg;
 	}
 
-	public void setLogMsg(String logMsg) {
+	public void setMsg(String logMsg) {
 		this.msg = logMsg;
 	}
 }
