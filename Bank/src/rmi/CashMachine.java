@@ -12,6 +12,7 @@ import domain.Account;
 import domain.User;
 import exceptions.BankException;
 import operation.CreateAccOperation;
+import operation.DepositOperation;
 import operation.WithdrawOperation;
 import services.ICashMachine;
 
@@ -34,9 +35,9 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 				return withdraw((WithdrawOperation) operation);
 				
 			case DEPOSIT:
-				break;
+				return deposit((DepositOperation) operation);
 				
-			case TRANSFERENCE:
+			case TRANSFERENCE:				
 				break;
 				
 			case FIND_ACCOUNTS:
@@ -78,7 +79,20 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			acc.withdraw(operation.getValue());
 			accDao.updateAccount(acc);
 			logDao.create(operation.getLog(), acc);
-			return true;
+		}
+		return false;
+	}
+	
+	private boolean deposit(DepositOperation operation) {
+		AccountDao accDao = new AccountDao();
+		LogDao logDao = new LogDao();
+		Account acc = accDao.findByNumber(Long.valueOf(operation.getOriginAccount()));
+		if(acc != null) {
+			if(acc.deposit(operation.getValue())) {
+				accDao.updateAccount(acc);
+				logDao.create(operation.getLog(), acc);
+				return true;
+			}
 		}
 		return false;
 	}
