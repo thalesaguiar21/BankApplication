@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -66,13 +65,26 @@ public class AccountDao {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Collection<Account> findAll() {
 		Session session = SessionManager.getSession();
-		@SuppressWarnings("deprecation")
-		Criteria c = session.createCriteria(Account.class);
-		@SuppressWarnings("unchecked")
-		Collection<Account> result = (Collection<Account>) c.list();
+		List<Account> result = null;
+		
+		try {
+			result = session.createQuery(" from Account ").list();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
 		return result;
+	}
+	
+	public Account findById(int id) {
+		Account acc = null;
+		if(id != 0) {
+		}
+		return acc;
 	}
 	
 	public void deleteAccounts(Collection<Account> accounts) {
@@ -87,7 +99,9 @@ public class AccountDao {
 		
 		try {
 			t = session.beginTransaction();
-			session.delete(acc);
+			acc = session.load(Account.class, acc.getId());
+			if(acc != null)
+				session.delete(acc);
 			t.commit();
 		} catch (HibernateException e) {
 			if(t != null)

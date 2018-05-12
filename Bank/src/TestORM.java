@@ -1,3 +1,5 @@
+import java.util.Collection;
+
 import dao.AccountDao;
 import dao.UserDao;
 import domain.Account;
@@ -8,12 +10,36 @@ public class TestORM {
 	public static void main(String[] args) {
 		AccountDao accDao = new AccountDao();
 		UserDao userDao = new UserDao();
-		// User usr = new User("Test", "12312312300");
 		
 		try {
 			User usr = userDao.createUser("Test", "12312312300");
 			Account acc = accDao.createAccount(usr, 700.0);
-			System.out.println("Account" + acc.getAccNumber() + " created with success!");
+			
+			Collection<User> users = userDao.findAll();
+			for(User user : users) {
+				System.out.println("Name: " + user.getName());
+				System.out.println("CPF: " + user.getCpf());
+			}
+			
+			acc.setBalance(8000.0);
+			
+			accDao.updateAccount(acc);
+			
+			usr.setName("Test changed");
+			
+			userDao.update(usr);
+			
+			Collection<Account> accounts = accDao.findAll();
+			for(Account account : accounts) {
+				System.out.println("Number: " + account.getAccNumber());
+				System.out.println("Balance: " + account.getBalance());
+				System.out.println("Owner: " + account.getUser().getName());
+			}
+			
+			accDao.deleteAccount(acc);
+			userDao.deleteUser(usr);
+			
+			// System.out.println("Account " + acc.getAccNumber() + " created with success!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		

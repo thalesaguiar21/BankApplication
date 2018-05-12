@@ -1,8 +1,8 @@
 package dao;
 
 import java.util.Collection;
+import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -19,10 +19,10 @@ public class UserDao {
 		
 		Transaction t = null;
 		Long userId = null;
-		User usr = new User(name, cpf);
+		User usr = new User(name, CpfUtils.formatToPersist(cpf));
+		Session session = SessionManager.getSession();
 		
 		try {
-			Session session = SessionManager.getSession();
 			t = session.beginTransaction();
 			userId = (Long) session.save(usr);
 			usr.setId(userId);
@@ -33,7 +33,7 @@ public class UserDao {
 			}
 			e.printStackTrace();
 		} finally {
-			
+			session.close();
 		}
 		return usr;
 	}
@@ -41,32 +41,53 @@ public class UserDao {
 	
 	public void deleteUser(User usr) {
 		Transaction t = null;
+		Session session = SessionManager.getSession();
 		
 		try {
-			Session session = SessionManager.getSession();
-			t = session.beginTransaction(); 
-			session.delete(usr);
+			t = session.beginTransaction();
+			usr = session.load(User.class, usr.getId());
+			if(usr != null)
+				session.delete(usr);
 			t.commit();
 		} catch (Exception e) {
 			if(t.isActive()) {
 				t.rollback();
 			}
 			e.printStackTrace();
+		} finally {
+			session.close();
 		}
 	}
 	
+	public User update(User usr) {
+		Transaction t = null;
+		Session session = SessionManager.getSession();
+		
+		try {
+			t = session.beginTransaction();
+			session.update(usr);
+			t.commit();
+		} catch (Exception e) {
+			if(t.isActive()) {
+				t.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return usr;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Collection<User> findAll() {
+		List<User> users = null;
 		try {
 			Session session = SessionManager.getSession();
-			@SuppressWarnings("deprecation")
-			Criteria c = session.createCriteria(User.class);
-			@SuppressWarnings("unchecked")
-			Collection<User> result = (Collection<User>) c.list();
-			return result;
+			users = session.createQuery(" from User ").list();
 		} catch (Exception e) {
 			System.out.println("COULD NOT FIND USERS!");
 			e.printStackTrace();
 		}
-		return null;
+		return users;
 	}
 }

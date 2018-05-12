@@ -2,6 +2,7 @@ package domain;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +24,8 @@ public class User {
 	@Column(unique=true, nullable=false)
 	private String cpf;
 	
-	@OneToMany(mappedBy="user", targetEntity=Account.class, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="user", targetEntity=Account.class, fetch=FetchType.LAZY,
+			cascade = CascadeType.ALL)
 	private Set<Account> accounts;
 	
 	public User() {}
