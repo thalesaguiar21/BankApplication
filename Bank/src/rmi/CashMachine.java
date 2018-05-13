@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
-import java.util.Set;
 
 import dao.AccountDao;
 import dao.LogDao;
@@ -113,15 +112,17 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 	private StringBuilder findAccounts(FindAccountsOperation operation) {
 		StringBuilder result = null;
 		if(operation.isValid()) {
+			result = new StringBuilder();
 			UserDao userDao = new UserDao();
 			User usr = userDao.findByCpf(operation.getOwnerCpf());
 			if(usr != null) {
-				usr.getAccounts();
-				Set<Account> accounts = usr.getAccounts();
-				result = new StringBuilder();
+				AccountDao accDao = new AccountDao();
+				Collection<Account> accounts = accDao.findByOwner(usr.getId());
 				for(Account acc : accounts) {
 					result.append("[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance() + "\n");
 				}
+			} else {
+				result.append("Could not find user with cpf " + operation.getOwnerCpf());
 			}
 		}
 		return result;
@@ -135,7 +136,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			if(logs != null) {
 				result = new StringBuilder();
 				result.append("[OPERATION]\tValue\t\tDate\n");
-				result.append("----------------------------------------------");
+				result.append("----------------------------------------------\n");
 				for(Log log : logs) {
 					result.append(log.getMsg() + "\n");
 				}

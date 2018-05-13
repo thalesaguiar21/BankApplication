@@ -7,6 +7,7 @@ import domain.AOperation;
 import exceptions.BankException;
 import operation.CreateAccOperation;
 import operation.DepositOperation;
+import operation.FindAccountsOperation;
 import operation.OperationType;
 import operation.PrintLogOperation;
 import operation.TransferenceOperation;
@@ -69,7 +70,7 @@ public class BasicInterface {
 				break;
 	
 			case FIND_ACCOUNTS:
-				System.out.println("[FIND] NOT IMPLEMENTED!");
+				findAccountsOpUI();
 				break;
 				
 			case GET_LOG:
@@ -168,6 +169,23 @@ public class BasicInterface {
 		} catch(InputMismatchException inpExc) {
 			operation = null;
 			System.out.println(this.INVALID_NUM);
+		} finally {
+			reader.nextLine();
+		}
+	}
+	
+	private void findAccountsOpUI() {
+		FindAccountsOperation findAccounts = new FindAccountsOperation();
+		try {
+			System.out.print("Owner's cpf: ");
+			findAccounts.setOwnerCpf(reader.nextLine());
+			
+			if(!CpfUtils.isValid(findAccounts.getOwnerCpf()))
+				throw new InputMismatchException();
+			
+			operation = findAccounts;
+		} catch (InputMismatchException inpExc) {
+			inpExc.printStackTrace();
 		} finally {
 			reader.nextLine();
 		}

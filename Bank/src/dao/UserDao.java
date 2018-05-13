@@ -97,7 +97,7 @@ public class UserDao {
 	@SuppressWarnings("unchecked")
 	public User findByCpf(String cpf) {
 		User usr = null;
-		if(CpfUtils.isValid(cpf))
+		if(!CpfUtils.isValid(cpf))
 			return usr;
 		
 		Session session = SessionManager.getSession();

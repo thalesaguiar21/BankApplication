@@ -102,6 +102,22 @@ public class AccountDao {
 		return acc;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Collection<Account> findByOwner(long ownerId) {
+		Collection<Account> result = null;
+		Session session = SessionManager.getSession();
+		
+		try {
+			String projection = " from Account where user.id = :owner ";
+			Query query = session.createQuery(projection);
+			query.setParameter("owner", ownerId);
+			result = query.getResultList();
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
 	public void deleteAccounts(Collection<Account> accounts) {
 		for(Account acc : accounts) {
 			deleteAccount(acc);
