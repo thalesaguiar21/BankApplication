@@ -73,11 +73,11 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 		
 		Account acc = accDao.createAccount(usr, cOp.getValue());
 		logDao.create(cOp.getLog(), acc);
-		String result = "[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance();
+		String result = "[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance() + "\n";
 		return result;
 	}
 	
-	private boolean withdraw(WithdrawOperation operation) {
+	private String withdraw(WithdrawOperation operation) {
 		AccountDao accDao = new AccountDao();
 		LogDao logDao = new LogDao();
 		Account acc = accDao.findByNumber(Long.valueOf(operation.getOriginAccount()));
@@ -85,8 +85,9 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			acc.withdraw(operation.getValue());
 			accDao.updateAccount(acc);
 			logDao.create(operation.getLog(), acc);
-		}
-		return true;
+			return "Success! Yout new balance is: " + acc.getBalance() + "\n";
+		} else
+			return "Could not find account with number: " + operation.getOriginAccount() + "\n";
 	}
 	
 	private String deposit(DepositOperation operation) {
@@ -97,12 +98,12 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			if(acc.deposit(operation.getValue())) {
 				accDao.updateAccount(acc);
 				logDao.create(operation.getLog(), acc);
-				return "Success! Your new balance is " + acc.getBalance();
+				return "Success! Your new balance is " + acc.getBalance() + "\n";
 			} else {
-				return "Failed to deposit! The following value is not valid: " + operation.getValue();
+				return "Failed to deposit! The following value is not valid: " + operation.getValue() + "\n";
 			}
 		}
-		return "Could not find account with number: " + operation.getOriginAccount();
+		return "Could not find account with number: " + operation.getOriginAccount() + "\n";
 	}
 	
 	private boolean transference(TransferenceOperation operation) {
@@ -119,7 +120,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 				Set<Account> accounts = usr.getAccounts();
 				result = new StringBuilder();
 				for(Account acc : accounts) {
-					result.append("[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance());
+					result.append("[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance() + "\n");
 				}
 			}
 		}
@@ -134,6 +135,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			if(logs != null) {
 				result = new StringBuilder();
 				result.append("[OPERATION]\tValue\t\tDate\n");
+				result.append("----------------------------------------------");
 				for(Log log : logs) {
 					result.append(log.getMsg() + "\n");
 				}
