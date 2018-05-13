@@ -2,6 +2,8 @@ package dao;
 
 import java.util.Collection;
 
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -96,5 +98,22 @@ public class LogDao {
 			session.close();
 		}
 		return logs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Collection<Log> findByAccNumber(Long number) {
+		Collection<Log> result = null;
+		Session session = SessionManager.getSession();
+		
+		try {
+			String projection = " from Log where account.accNumber = :number ";
+			Query query = session.createQuery(projection);
+			query.setParameter("number", number);
+			result = query.getResultList();
+		} finally {
+			session.close();
+		}
+		
+		return result;
 	}
 }

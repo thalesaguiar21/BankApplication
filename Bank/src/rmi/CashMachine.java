@@ -3,16 +3,22 @@ package rmi;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collection;
+import java.util.Set;
 
 import dao.AccountDao;
 import dao.LogDao;
 import dao.UserDao;
 import domain.AOperation;
 import domain.Account;
+import domain.Log;
 import domain.User;
 import exceptions.BankException;
 import operation.CreateAccOperation;
 import operation.DepositOperation;
+import operation.FindAccountsOperation;
+import operation.PrintLogOperation;
+import operation.TransferenceOperation;
 import operation.WithdrawOperation;
 import services.ICashMachine;
 
@@ -25,7 +31,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 	}
 
 	@Override
-	public boolean executeAccountOp(AOperation operation) throws RemoteException {
+	public Object executeAccountOp(AOperation operation) throws RemoteException {
 		if(operation != null) {
 			switch (operation.getType()) {
 			case CREATE:
@@ -38,13 +44,13 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 				return deposit((DepositOperation) operation);
 				
 			case TRANSFERENCE:				
-				break;
+				return transference((TransferenceOperation) operation);
 				
 			case FIND_ACCOUNTS:
-				break;
+				return findAccounts((FindAccountsOperation) operation);
 				
 			case GET_LOG:
-				break;
+				return printLog((PrintLogOperation) operation);
 
 			default:
 				break;
@@ -54,7 +60,7 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 		return false;
 	}
 
-	private boolean createAccount(AOperation op) throws BankException {
+	private String createAccount(AOperation op) throws BankException {
 		CreateAccOperation cOp = (CreateAccOperation) op;
 		UserDao userDao = new UserDao();
 		AccountDao accDao = new AccountDao();
@@ -67,8 +73,8 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 		
 		Account acc = accDao.createAccount(usr, cOp.getValue());
 		logDao.create(cOp.getLog(), acc);
-		System.out.println("Account created!");
-		return true;
+		String result = "[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance();
+		return result;
 	}
 	
 	private boolean withdraw(WithdrawOperation operation) {
@@ -80,10 +86,10 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			accDao.updateAccount(acc);
 			logDao.create(operation.getLog(), acc);
 		}
-		return false;
+		return true;
 	}
 	
-	private boolean deposit(DepositOperation operation) {
+	private String deposit(DepositOperation operation) {
 		AccountDao accDao = new AccountDao();
 		LogDao logDao = new LogDao();
 		Account acc = accDao.findByNumber(Long.valueOf(operation.getOriginAccount()));
@@ -91,9 +97,48 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 			if(acc.deposit(operation.getValue())) {
 				accDao.updateAccount(acc);
 				logDao.create(operation.getLog(), acc);
-				return true;
+				return "Success! Your new balance is " + acc.getBalance();
+			} else {
+				return "Failed to deposit! The following value is not valid: " + operation.getValue();
 			}
 		}
-		return false;
+		return "Could not find account with number: " + operation.getOriginAccount();
+	}
+	
+	private boolean transference(TransferenceOperation operation) {
+		return true;
+	}
+	
+	private StringBuilder findAccounts(FindAccountsOperation operation) {
+		StringBuilder result = null;
+		if(operation.isValid()) {
+			UserDao userDao = new UserDao();
+			User usr = userDao.findByCpf(operation.getOwnerCpf());
+			if(usr != null) {
+				usr.getAccounts();
+				Set<Account> accounts = usr.getAccounts();
+				result = new StringBuilder();
+				for(Account acc : accounts) {
+					result.append("[ACCOUNT]\tNº " + acc.getAccNumber() + "\tBalance: " + acc.getBalance());
+				}
+			}
+		}
+		return result;
+	}
+	
+	private StringBuilder printLog(PrintLogOperation operation) {
+		StringBuilder result = null;
+		if(operation.isValid()) {
+			LogDao logDao = new LogDao();
+			Collection<Log> logs = logDao.findByAccNumber(Long.valueOf(operation.getOriginAccount()));
+			if(logs != null) {
+				result = new StringBuilder();
+				result.append("[OPERATION]\tValue\t\tDate\n");
+				for(Log log : logs) {
+					result.append(log.getMsg() + "\n");
+				}
+			}
+		}
+		return result;
 	}
 }

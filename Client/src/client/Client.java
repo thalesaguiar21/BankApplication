@@ -31,8 +31,10 @@ public class Client {
 				currentOperation = UI.selectOp();
 				if(currentOperation != null) {
 					operation = UI.redirectOp(currentOperation);
-					if(operation != null)
-						machineStub.executeAccountOp(operation);
+					if(operation != null) {
+						Object obj = machineStub.executeAccountOp(operation);
+						System.out.println("\n\n" + obj);
+					}						
 				} else {
 					System.out.println("[ERROR] Invalid operation, please try again!");
 					System.out.println("\n\n");
