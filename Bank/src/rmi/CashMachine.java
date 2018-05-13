@@ -105,8 +105,30 @@ public class CashMachine extends UnicastRemoteObject implements ICashMachine, Se
 		return "Could not find account with number: " + operation.getOriginAccount() + "\n";
 	}
 	
-	private boolean transference(TransferenceOperation operation) {
-		return true;
+	private StringBuilder transference(TransferenceOperation operation) {
+		StringBuilder result = new StringBuilder(); 
+		if(operation.isValid()) {
+			AccountDao accDao = new AccountDao();
+			LogDao logDao = new LogDao();
+			Account accOrigin = accDao.findByNumber(Long.valueOf(operation.getOriginAccount()));
+			Account accTarget = accDao.findByNumber(Long.valueOf(operation.getTargetAccount()));
+			if(accOrigin != null && accTarget != null) {
+				if(accOrigin.withdraw(operation.getValue()) && accTarget.deposit(operation.getValue())) {
+					accDao.updateAccount(accOrigin);
+					accDao.updateAccount(accTarget);
+					logDao.create(operation.getLog(), accOrigin);
+					logDao.create(operation.getLog(), accTarget);
+					result.append("Success! Your new balance is: " + accOrigin.getBalance());
+				} else {
+					result.append("Could not withdraw or deposit the value: " + operation.getValue());
+				}
+			} else {
+				result.append("Could not find one of the accounts");
+			}
+		} else {
+			result.append("Invalid operation!");
+		}
+		return result;
 	}
 	
 	private StringBuilder findAccounts(FindAccountsOperation operation) {

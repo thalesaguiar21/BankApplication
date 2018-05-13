@@ -31,7 +31,7 @@ public class TransferenceOperation extends AOperation {
 		valid = valid && (originAccount != null && originAccount > 0);
 		valid = valid && (targetAccount != null && targetAccount > 0);
 		valid = valid && (value != null && (value > 0 && value < Account.MAX_BALANCE));
-		return false;
+		return valid;
 	}
 	
 	public Integer getTargetAccount() {
