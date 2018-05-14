@@ -2,8 +2,9 @@ package rmi;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
+
+import javax.jws.WebService;
 
 import dao.AccountDao;
 import dao.LogDao;
@@ -21,7 +22,8 @@ import operation.TransferenceOperation;
 import operation.WithdrawOperation;
 import services.ICashMachine;
 
-public class CashMachine extends UnicastRemoteObject implements ICashMachine, Serializable {
+@WebService(endpointInterface = "services.ICashMachine")
+public class CashMachine implements ICashMachine, Serializable {
 	
 	static final long serialVersionUID = 0;
 

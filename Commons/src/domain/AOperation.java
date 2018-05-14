@@ -4,8 +4,18 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import operation.OperationType;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
+import operation.CreateAccOperation;
+import operation.DepositOperation;
+import operation.FindAccountsOperation;
+import operation.OperationType;
+import operation.PrintLogOperation;
+import operation.TransferenceOperation;
+import operation.WithdrawOperation;
+
+@XmlSeeAlso({CreateAccOperation.class, DepositOperation.class, FindAccountsOperation.class,
+	PrintLogOperation.class, TransferenceOperation.class, WithdrawOperation.class})
 public abstract class AOperation implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

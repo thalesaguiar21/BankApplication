@@ -79,10 +79,12 @@ public class BasicInterface {
 				
 			case EXIT:
 				System.out.println("Closing operations... Finished");
+				operation = null;
 				break;
 				
 			default:
 				System.err.println("[ERROR] Invalid operation! " + op);
+				operation = null;
 				break;
 		}
 		System.out.println("\n\n");

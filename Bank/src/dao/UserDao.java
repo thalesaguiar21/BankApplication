@@ -107,9 +107,7 @@ public class UserDao {
 			Query query = session.createQuery(projection);
 			query.setParameter("user_cpf", cpf);
 			List<User> result = query.getResultList();
-			if(result == null)
-				usr = null;
-			else
+			if(result != null && result.size() > 0)
 				usr = result.get(0);
 		} catch (Exception e) {
 			e.printStackTrace();

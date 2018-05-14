@@ -1,8 +1,12 @@
 package client;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Service;
 
 import domain.AOperation;
 import operation.OperationType;
@@ -26,13 +30,18 @@ public class Client {
 		OperationType currentOperation = OperationType.EXIT;
 		AOperation operation;
 		try {
-			machineStub = (ICashMachine) Naming.lookup("rmi://" + address + "/CashMachine");
+			URL url = new URL("http://" + address + "/CashMachine?wsdl");
+			QName qname = new QName("http://rmi/", "CashMachineService");
+			
+			Service service = Service.create(url, qname);
+			
+			ICashMachine server = service.getPort(ICashMachine.class);
 			do {
 				currentOperation = UI.selectOp();
 				if(currentOperation != null) {
 					operation = UI.redirectOp(currentOperation);
 					if(operation != null) {
-						Object obj = machineStub.executeAccountOp(operation);
+						Object obj = server.executeAccountOp(operation);
 						System.out.println("\n\n" + obj);
 					}						
 				} else {
@@ -45,8 +54,6 @@ public class Client {
 			e.printStackTrace();
 		} catch (RemoteException e) {
 			System.err.println("[ERROR] Failed to communicate with server!");
-			e.printStackTrace();
-		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
 	}
